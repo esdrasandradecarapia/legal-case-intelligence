@@ -1,6 +1,7 @@
+import pytest
+
 from ai_research_agent.domain.chunking import Chunker
 from ai_research_agent.domain.entities import Document
-import pytest
 
 
 def test_short_text_produces_single_chunk(): ...

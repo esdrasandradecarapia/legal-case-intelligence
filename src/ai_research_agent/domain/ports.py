@@ -1,7 +1,6 @@
 from typing import Protocol
 
 from ai_research_agent.domain.entities import Chunk
-from ai_research_agent.domain.entities import RetrievedChunk
 
 
 class Embedder(Protocol):
@@ -19,7 +18,7 @@ class VectorStore(Protocol):
         self,
         embedding: list[float],
         limit: int,
-    ) -> list[RetrievedChunk]: ...
+    ) -> list[Chunk]: ...
 
 
 class LLM(Protocol):

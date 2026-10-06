@@ -1,9 +1,9 @@
-from dataclasses import FrozenInstanceError
 import dataclasses
+from dataclasses import FrozenInstanceError
 
 import pytest
 
-from ai_research_agent.domain.entities import Chunk, Document, Answer, RetrievedChunk
+from ai_research_agent.domain.entities import Answer, Chunk, Document, RetrievedChunk
 
 
 def test_document_is_immutable():
@@ -26,6 +26,7 @@ def test_chunk_is_immutable():
 
     with pytest.raises(FrozenInstanceError):
         chunk.text = "changed"
+
 
 def test_retrieved_chunk_holds_chunk_and_score():
     chunk = Chunk(document_id="document-1", index=0, text="abcd")

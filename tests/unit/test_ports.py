@@ -1,5 +1,5 @@
 from ai_research_agent.domain.entities import Chunk
-from ai_research_agent.domain.ports import Embedder, LLM, VectorStore
+from ai_research_agent.domain.ports import LLM, Embedder, VectorStore
 
 
 class FakeEmbedder:

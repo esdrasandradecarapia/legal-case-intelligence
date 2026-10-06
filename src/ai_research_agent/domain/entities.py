@@ -14,6 +14,7 @@ class Chunk:
     index: int
     text: str
 
+
 @dataclass(frozen=True)
 class RetrievedChunk:
     chunk: Chunk
