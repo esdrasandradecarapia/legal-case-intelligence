@@ -10,3 +10,4 @@ class Settings(BaseSettings):
     database_user: str = "postgres"
     database_password: str = "postgres"
     database_name: str = "ai_research_agent"
+    llm_provider: str = "ollama"

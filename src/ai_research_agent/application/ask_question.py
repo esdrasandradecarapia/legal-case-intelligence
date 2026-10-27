@@ -27,6 +27,8 @@ class AskQuestion:
             f"Pergunta: {question}"
         )
 
+        print(prompt, flush=True)
+    
         response_text = self.llm.generate(prompt)
 
         sources = [item.chunk for item in retrieved_chunks]
