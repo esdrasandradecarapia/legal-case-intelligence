@@ -1,7 +1,9 @@
 from ai_research_agent.application.agent.tools import TOOLS_SCHEMA
 from ai_research_agent.application.ask_question import AskQuestion
-from ai_research_agent.domain.entities import Answer, Chunk
+from ai_research_agent.domain.entities import Answer
 from ai_research_agent.domain.ports import OrderNotFoundError, OrderRepository, ToolCallingLLM
+
+ASK_FOR_ORDER_ID_MESSAGE = "Claro! Pode me informar o número do seu pedido para eu consultar?"
 
 
 class AgentRouter:
@@ -24,7 +26,10 @@ class AgentRouter:
         return self.ask_question.execute(question)
 
     def _handle_order_status(self, arguments: dict) -> Answer:
-        order_id = arguments["order_id"]
+        order_id = arguments.get("order_id", "")
+
+        if not order_id.isdigit():
+            return Answer(text=ASK_FOR_ORDER_ID_MESSAGE, sources=[])
 
         try:
             status = self.order_repository.get_order_status(order_id)

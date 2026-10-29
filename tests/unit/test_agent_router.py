@@ -1,7 +1,6 @@
 from ai_research_agent.application.agent.router import AgentRouter
-from ai_research_agent.application.ask_question import AskQuestion
 from ai_research_agent.domain.entities import Answer
-from ai_research_agent.domain.ports import OrderNotFoundError, OrderStatus, ToolDecision
+from ai_research_agent.domain.ports import ToolDecision
 from ai_research_agent.infrastructure.order_api_adapter import FakeOrderRepository
 
 
@@ -76,3 +75,43 @@ def test_falls_back_to_rag_when_no_tool_is_chosen():
 
     assert answer == expected_answer
     assert ask_question.received_questions == ["Qual a política de troca?"]
+
+def test_asks_for_order_id_when_missing():
+    tool_calling_llm = FakeToolCallingLLM(
+        decision=ToolDecision(tool_name="check_order_status", arguments={})
+    )
+    ask_question = FakeAskQuestion(answer=Answer(text="não deveria chegar aqui", sources=[]))
+    order_repository = FakeOrderRepository()
+
+    router = AgentRouter(
+        tool_calling_llm=tool_calling_llm,
+        ask_question=ask_question,
+        order_repository=order_repository,
+    )
+
+    answer = router.route("Qual o status do meu pedido?")
+
+    assert "número" in answer.text.lower()
+    assert ask_question.received_questions == []
+
+
+def test_asks_for_order_id_when_model_hallucinates_non_numeric_value():
+    tool_calling_llm = FakeToolCallingLLM(
+        decision=ToolDecision(
+            tool_name="check_order_status",
+            arguments={"order_id": "exemplo de ID de pedido"},
+        )
+    )
+    ask_question = FakeAskQuestion(answer=Answer(text="não deveria chegar aqui", sources=[]))
+    order_repository = FakeOrderRepository()
+
+    router = AgentRouter(
+        tool_calling_llm=tool_calling_llm,
+        ask_question=ask_question,
+        order_repository=order_repository,
+    )
+
+    answer = router.route("Qual o status do meu pedido?")
+
+    assert "número" in answer.text.lower()
+    assert ask_question.received_questions == []
